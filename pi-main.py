@@ -1,13 +1,8 @@
-import time
-start = time.time()
-
-
 import cv2
 import cv2.aruco as aruco
 import numpy as np
+from PIL import Image
 
-
-libLoadtime= time.time()
 # Initialize the Raspberry Pi camera (you might need additional code for this)
 # camera = cv2.VideoCapture(0)
 
@@ -15,7 +10,7 @@ libLoadtime= time.time()
 # ret, frame = camera.read()
 
 # Load an image (for testing purposes)
-frame = cv2.imread('your_image.png')
+frame = cv2.imread('your_image.jpg')
 
 # Define the ArUco dictionary and parameters
 aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_100)
@@ -54,9 +49,9 @@ if markerIds is not None:
     width = np.linalg.norm(boundingBoxCorners[0][0] - boundingBoxCorners[1][0])
     height = np.linalg.norm(boundingBoxCorners[1][1] - boundingBoxCorners[2][1])
 
-    #print(width)
-    #print(height)
-    #print(boundingBoxCorners)
+    print(width)
+    print(height)
+    print(boundingBoxCorners)
     # Get the rotation matrix and apply the perspective transform to extract the ROI
     pts1 = np.float32(boundingBoxCorners)
     pts2 = np.float32([[0, 0], [width, 0], [width, height],[0, height] ])  # Define the bounding box size dynamically
@@ -69,7 +64,30 @@ if markerIds is not None:
 
 # Save the first image with red bounding boxes around the ArUco codes
 cv2.polylines(frame, [np.int32(corners[i])], isClosed=True, color=(0, 0, 255), thickness=2)
-cv2.imwrite('original_with_bounding_boxes.png', frame)
-end = time.time()
-print(libLoadtime - start)
-print(end - libLoadtime)
+#cv2.imwrite('original_with_bounding_boxes.png', frame)
+
+
+# Load ROI and mask images
+roi_image = Image.open("roi.png")
+mask_image = Image.open("mask.png")
+
+# Ensure both images have the same dimensions
+roi_image = roi_image.resize(mask_image.size)
+
+# Create a new transparent image with the same dimensions as ROI image
+result_image = Image.new("RGBA", roi_image.size, (0, 0, 0, 0))
+
+# Iterate through each pixel in the mask and apply the mask to ROI
+for x in range(mask_image.width):
+    for y in range(mask_image.height):
+        pixel = mask_image.getpixel((x, y))
+        roi_pixel = roi_image.getpixel((x, y))
+        #print(pixel)
+        if pixel == (0, 0, 0, 255):  # Black pixel in mask
+            #print("Found Black Pixel")
+            result_image.putpixel((x, y), (0, 0, 0, 0))  # Make it transparent
+        else:  # White pixel in mask
+            result_image.putpixel((x, y), roi_pixel)  # Copy ROI pixel
+
+# Save the result image
+result_image.save("result.png")
