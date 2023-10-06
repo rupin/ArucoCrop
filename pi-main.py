@@ -1,9 +1,13 @@
+import time
+start = time.time()
+
+
 import cv2
 import cv2.aruco as aruco
 import numpy as np
-import time
 
-start = time.time()
+
+
 # Initialize the Raspberry Pi camera (you might need additional code for this)
 # camera = cv2.VideoCapture(0)
 
