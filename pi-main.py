@@ -7,7 +7,7 @@ import cv2.aruco as aruco
 import numpy as np
 
 
-
+libLoadtime= time.time()
 # Initialize the Raspberry Pi camera (you might need additional code for this)
 # camera = cv2.VideoCapture(0)
 
@@ -71,4 +71,5 @@ if markerIds is not None:
 cv2.polylines(frame, [np.int32(corners[i])], isClosed=True, color=(0, 0, 255), thickness=2)
 cv2.imwrite('original_with_bounding_boxes.png', frame)
 end = time.time()
-print(end - start)
+print(libLoadtime - start)
+print(end - libLoadtime)
