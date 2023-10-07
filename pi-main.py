@@ -2,10 +2,19 @@ import cv2
 import cv2.aruco as aruco
 import numpy as np
 from PIL import Image
+import picamera
+# Create a PiCamera instance
+camera = picamera.PiCamera()
 
-# Initialize the webcam (0 represents the default camera, you can change it if needed)
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_AUTO_WB, 1.0) # Enable automatic white balance
+# Set camera resolution (optional)
+camera.resolution = (640, 480)
+
+# Create an OpenCV VideoCapture object to read frames from the camera
+cap = cv2.VideoCapture()
+
+# Set the VideoCapture source to the PiCamera
+cap.open(camera, cv2.CAP_GSTREAMER)
+
 
 # Check if the webcam is opened successfully
 if not cap.isOpened():
