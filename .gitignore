@@ -1,3 +1,5 @@
 *.png
 !Mask.png
 !mask.png
+*.jpg
+*.jpeg
