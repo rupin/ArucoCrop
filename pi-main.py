@@ -82,7 +82,7 @@ roi_image = roi
 mask_image = Image.open("mask.png")
 
 # Ensure both images have the same dimensions
-roi_image = roi_image.resize(mask_image.size)
+roi_image = roi_image.resize(mask_image.size,refcheck = False)
 
 # Create a new transparent image with the same dimensions as ROI image
 result_image = Image.new("RGBA", roi_image.size, (0, 0, 0, 0))
