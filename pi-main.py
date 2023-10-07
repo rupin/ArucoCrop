@@ -24,7 +24,7 @@ while (markerIds is None or len(markerIds)!=4):
     #cv2.imshow("Window", frame)
     #cv2.waitKey(1)
     # Detect ArUco markers in the image
-    corners, markerIds = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
+    corners, markerIds, rejectedCandidates = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     #print(len(markerIds))
 
 
