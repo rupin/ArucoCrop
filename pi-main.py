@@ -80,9 +80,9 @@ cv2.polylines(frame, [np.int32(corners[i])], isClosed=True, color=(0, 0, 255), t
 # Load ROI and mask images
 roi_image = Image.open("roi.png")
 mask_image = Image.open("mask.png")
-
+roi_image=roi_image.copy()
 # Ensure both images have the same dimensions
-roi_image = roi_image.resize(mask_image.size,refcheck = False)
+roi_image = roi_image.resize(mask_image.size)
 
 # Create a new transparent image with the same dimensions as ROI image
 result_image = Image.new("RGBA", roi_image.size, (0, 0, 0, 0))
