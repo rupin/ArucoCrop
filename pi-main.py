@@ -3,21 +3,31 @@ import cv2.aruco as aruco
 import numpy as np
 from PIL import Image
 
-# Initialize the Raspberry Pi camera (you might need additional code for this)
-# camera = cv2.VideoCapture(0)
+# Initialize the webcam (0 represents the default camera, you can change it if needed)
+cap = cv2.VideoCapture(0)
 
-# Capture an image from the camera
-# ret, frame = camera.read()
+# Check if the webcam is opened successfully
+if not cap.isOpened():
+    print("Error: Could not open webcam.")
+    exit()
 
-# Load an image (for testing purposes)
-frame = cv2.imread('your_image.jpg')
+markerIds=None
 
 # Define the ArUco dictionary and parameters
 aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_100)
 parameters = aruco.DetectorParameters_create()
 
-# Detect ArUco markers in the image
-corners, markerIds, _ = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
+
+
+while (markerIds is None or len(markerIds)!=4):
+    ret, frame = cap.read()
+    #cv2.imshow("Window", frame)
+    #cv2.waitKey(1)
+    # Detect ArUco markers in the image
+    corners, markerIds = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
+    #print(len(markerIds))
+
+
 boundingBoxCorners=[[0, 0], [0, 0], [0, 0], [0, 0]]
 if markerIds is not None:
     print("Aruco Detected")
@@ -49,9 +59,9 @@ if markerIds is not None:
     width = np.linalg.norm(boundingBoxCorners[0][0] - boundingBoxCorners[1][0])
     height = np.linalg.norm(boundingBoxCorners[1][1] - boundingBoxCorners[2][1])
 
-    print(width)
-    print(height)
-    print(boundingBoxCorners)
+    #print(width)
+    #print(height)
+    #print(boundingBoxCorners)
     # Get the rotation matrix and apply the perspective transform to extract the ROI
     pts1 = np.float32(boundingBoxCorners)
     pts2 = np.float32([[0, 0], [width, 0], [width, height],[0, height] ])  # Define the bounding box size dynamically
@@ -68,7 +78,7 @@ cv2.polylines(frame, [np.int32(corners[i])], isClosed=True, color=(0, 0, 255), t
 
 
 # Load ROI and mask images
-roi_image = Image.open("roi.png")
+roi_image = roi
 mask_image = Image.open("mask.png")
 
 # Ensure both images have the same dimensions
