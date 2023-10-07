@@ -3,24 +3,28 @@ import cv2.aruco as aruco
 import numpy as np
 from PIL import Image
 import picamera
+from io import BytesIO
+
+
 # Create a PiCamera instance
 camera = picamera.PiCamera()
 
 # Set camera resolution (optional)
 camera.resolution = (640, 480)
 
-# Create an OpenCV VideoCapture object to read frames from the camera
+# Create an OpenCV VideoCapture object
 cap = cv2.VideoCapture()
 
-# Set the VideoCapture source to the PiCamera
-cap.open(camera, cv2.CAP_GSTREAMER)
+# Create an in-memory stream for capturing images without saving to disk
+stream = BytesIO()
 
 
-# Check if the webcam is opened successfully
+
+"""# Check if the webcam is opened successfully
 if not cap.isOpened():
     print("Error: Could not open webcam.")
     exit()
-
+"""
 markerIds=None
 
 # Define the ArUco dictionary and parameters
@@ -30,7 +34,15 @@ parameters = aruco.DetectorParameters_create()
 
 
 while (markerIds is None or len(markerIds)!=4):
-    ret, frame = cap.read()
+
+    camera.capture(stream, format='png')
+    
+    # Reset the stream position to the beginning
+    stream.seek(0)
+    
+    # Read the image from the stream using OpenCV
+    frame = cv2.imdecode(np.frombuffer(stream.read(), dtype=np.uint8), 1)
+    #ret, frame = cap.read()
     #cv2.imshow("Window", frame)
     #cv2.waitKey(1)
     # Detect ArUco markers in the image
