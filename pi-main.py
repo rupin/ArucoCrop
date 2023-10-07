@@ -31,6 +31,7 @@ markerIds=None
 aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_100)
 parameters = aruco.DetectorParameters_create()
 
+camera.start_preview()
 
 
 while (markerIds is None or len(markerIds)!=4):
@@ -49,6 +50,7 @@ while (markerIds is None or len(markerIds)!=4):
     corners, markerIds, rejectedCandidates = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     #print(len(markerIds))
 
+camera.stop_preview()
 
 boundingBoxCorners=[[0, 0], [0, 0], [0, 0], [0, 0]]
 if markerIds is not None:
