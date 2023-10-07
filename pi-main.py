@@ -78,7 +78,7 @@ cv2.polylines(frame, [np.int32(corners[i])], isClosed=True, color=(0, 0, 255), t
 
 
 # Load ROI and mask images
-roi_image = roi
+roi_image = Image.open("roi.png")
 mask_image = Image.open("mask.png")
 
 # Ensure both images have the same dimensions
