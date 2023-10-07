@@ -5,6 +5,7 @@ from PIL import Image
 
 # Initialize the webcam (0 represents the default camera, you can change it if needed)
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_AUTO_WB, 1.0) # Enable automatic white balance
 
 # Check if the webcam is opened successfully
 if not cap.isOpened():
