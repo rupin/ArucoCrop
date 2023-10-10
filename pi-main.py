@@ -134,7 +134,7 @@ for x in range(mask_image.width):
 # Save the result image
 result_image.save("result.png")
 
-
+print("Result Generated, sending across")
 # Constants
 HOST = '192.168.29.16'
 PORT = 12345
