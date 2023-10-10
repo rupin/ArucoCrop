@@ -131,8 +131,7 @@ for x in range(mask_image.width):
         else:  # White pixel in mask
             result_image.putpixel((x, y), roi_pixel)  # Copy ROI pixel
 
-# Save the result image
-result_image.save("result.png")
+
 
 print("Result Generated, sending across")
 # Constants
@@ -150,3 +149,6 @@ message_size = struct.pack("L", len(result_image))
 client_socket.sendall(message_size + data)
 
 client_socket.close()
+
+# Save the result image
+result_image.save("result.png")
