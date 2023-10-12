@@ -141,7 +141,7 @@ PORT = 12345
 # Create a socket connection to Unity
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
-client_socket.sendall("Testing Connection")
+client_socket.sendall(bytes("Testing Connection",'utf-8'))
 
 data = pickle.dumps(frame)
 message_size = struct.pack("L", len(result_image))
