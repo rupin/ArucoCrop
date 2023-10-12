@@ -154,7 +154,7 @@ result_image.save("result.png")
 
 
 # Load ROI and mask images
-roi_image = Image.open("roi.png")
+roi_image = Image.open("ROI.png")
 mask_image = Image.open("mask.png")
 
 # Ensure both images have the same dimensions
@@ -168,8 +168,11 @@ mask_array = np.array(mask_image)
 result_array = np.zeros_like(roi_array, dtype=np.uint8)
 
 # Mask the ROI image based on the mask using NumPy
-result_array[mask_array == [0, 0, 0]] = [0, 0, 0, 0]
-result_array[mask_array != [0, 0, 0]] = roi_array[mask_array != [0, 0, 0]]
+mask_black = (mask_array == [0, 0, 0])
+result_array[mask_black] = [0, 0, 0, 0]
+
+mask_white = (mask_array != [0, 0, 0])
+result_array[mask_white] = roi_array[mask_white]
 
 # Convert the NumPy array back to an image
 result_image = Image.fromarray(result_array)
