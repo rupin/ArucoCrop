@@ -149,36 +149,30 @@ for x in range(mask_image.width):
         else:  # White pixel in mask
             result_image.putpixel((x, y), roi_pixel)  # Copy ROI pixel
 
-result_image.save("result.png")
-"""
+result_image.save("result.png")"""
 
 
-# Load ROI and mask images
-roi_image = Image.open("roi.png")
-mask_image = Image.open("mask.png")
+# Load ROI and mask images using OpenCV
+roi_image = cv2.imread("roi.png")
+mask_image = cv2.imread("mask.png")
 
 # Ensure both images have the same dimensions
-roi_image = roi_image.resize(mask_image.size)
+mask_image = cv2.resize(mask_image, (roi_image.shape[1], roi_image.shape[0]))
 
-# Convert the images to NumPy arrays
-roi_array = np.array(roi_image)
-mask_array = np.array(mask_image)
+# Create a binary mask where black pixels in the mask are 0, and all others are 1
+binary_mask = cv2.inRange(mask_image, (0, 0, 0), (0, 0, 0))
 
-# Create a new transparent image with the same dimensions as ROI image
-result_array = np.zeros_like(roi_array, dtype=np.uint8)
+# Invert the binary mask to keep white areas as 1
+binary_mask = cv2.bitwise_not(binary_mask)
 
-# Mask the ROI image based on the mask using NumPy
-mask_black = (mask_array == [0, 0, 0])
-result_array[mask_black] = [0, 0, 0, 0]
+# Create a new image with transparency (4 channels)
+result_image = cv2.cvtColor(roi_image, cv2.COLOR_BGR2BGRA)
 
-mask_white = (mask_array != [0, 0, 0])
-result_array[mask_white] = roi_array[mask_white]
-
-# Convert the NumPy array back to an image
-result_image = Image.fromarray(result_array)
+# Apply the binary mask to set the alpha channel to 0 where the mask is 0
+result_image[:, :, 3] = cv2.bitwise_and(result_image[:, :, 3], binary_mask)
 
 # Save the result image
-result_image.save("result.png")
+cv2.imwrite("result.png", result_image)
 
 maskend=time.time()
 
