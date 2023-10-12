@@ -1,3 +1,5 @@
+start=time.time()
+
 import cv2
 import cv2.aruco as aruco
 import numpy as np
@@ -5,9 +7,13 @@ from PIL import Image
 import picamera
 from io import BytesIO
 
+import time
+
 import socket
 import pickle
 import struct
+
+loading=time.time()
 
 def read_image(file_path):
     with Image.open(file_path) as im:
@@ -47,7 +53,7 @@ parameters = aruco.DetectorParameters_create()
 
 camera.start_preview()
 
-
+preview_start=time.time()
 while (markerIds is None or len(markerIds)!=4):
 
     camera.capture(stream, format='png')
@@ -65,6 +71,9 @@ while (markerIds is None or len(markerIds)!=4):
     #print(len(markerIds))
 
 camera.stop_preview()
+
+detectionstart=time.time()
+
 
 boundingBoxCorners=[[0, 0], [0, 0], [0, 0], [0, 0]]
 if markerIds is not None:
@@ -110,11 +119,13 @@ if markerIds is not None:
     # Save the ROI as a separate image
     cv2.imwrite(f'roi.png', roi)       
 
+detectionend=time.time()
+
 # Save the first image with red bounding boxes around the ArUco codes
 cv2.polylines(frame, [np.int32(corners[i])], isClosed=True, color=(0, 0, 255), thickness=2)
 #cv2.imwrite('original_with_bounding_boxes.png', frame)
 
-
+maskstart=time.time()
 # Load ROI and mask images
 roi_image = Image.open("roi.png")
 mask_image = Image.open("mask.png")
@@ -139,6 +150,7 @@ for x in range(mask_image.width):
 
 result_image.save("result.png")
 
+maskend=time.time()
 
 print("Result Generated, sending across")
 # Constants
@@ -153,6 +165,23 @@ width, height, imagebytes=read_image("result.png")
 
 client_socket.sendall(imagebytes)
 #client_socket.sendall(height.to_bytes(2, 'little', signed=False))
+
+transmitend=time.time()
+
+
+print("Library Load:"+str(loading-start))
+print("Preview Start:"+str(preview_start-loading))
+
+print("Detection Time:"+str(detectionstart-preview_start))
+
+
+print("ROI Selection:"+str(detectionend-detectionstart))
+
+print("Masking:"+str(maskend-maskstart))
+
+print("Transmission:"+str(transmitend-maskend))
+
+
 
 client_socket.close()
 client_socket=None
