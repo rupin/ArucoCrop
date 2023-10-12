@@ -66,11 +66,13 @@ while (True):
     # Read the image from the stream using OpenCV
     frame = cv2.imdecode(np.frombuffer(stream.read(), dtype=np.uint8), 1)
     #ret, frame = cap.read()
-    #cv2.imshow("Window", frame)
-    #cv2.waitKey(1)
+    cv2.imshow("Window", frame)
+    cv2.waitKey(1)
     # Detect ArUco markers in the image
     corners, markerIds, rejectedCandidates = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     print(len(markerIds))
+    stream=None
+    frame=None
     if(len(markerIds)==4):
         break
 
