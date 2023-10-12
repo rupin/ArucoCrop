@@ -22,9 +22,10 @@ client_socket.connect((HOST, PORT))
 
 width, height, imagebytes=read_image("mask.png")
 
-client_socket.sendall(width.to_bytes(2, 'little', signed=False))
-client_socket.sendall(height.to_bytes(2, 'little', signed=False))
+client_socket.sendall(imagebytes)
+#client_socket.sendall(height.to_bytes(2, 'little', signed=False))
 
 client_socket.close()
 client_socket=None
 
+#a=input()
