@@ -16,7 +16,6 @@ def read_image(file_path):
         image_bytes = file.read()
     return width, height, image_bytes
 
-
 # Create a PiCamera instance
 camera = picamera.PiCamera()
 
@@ -149,7 +148,11 @@ PORT = 12345
 # Create a socket connection to Unity
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
-client_socket.sendall(read_image("result.png"))
+
+width, height, imagebytes=read_image("result.png")
+
+client_socket.sendall(imagebytes)
+#client_socket.sendall(height.to_bytes(2, 'little', signed=False))
+
 client_socket.close()
 client_socket=None
-print("Image Sent, did you recieve it?")
