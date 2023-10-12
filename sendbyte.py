@@ -11,20 +11,19 @@ def read_image(file_path):
         image_bytes = file.read()
     return width, height, image_bytes
 
-
 print("Result Generated, sending across")
 # Constants
-HOST = '192.168.29.213'
+HOST = '192.168.29.16'
 PORT = 12345
 
 # Create a socket connection to Unity
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
-width, height, imagebytes=read_image("result.png")
+width, height, imagebytes=read_image("mask.png")
 
-client_socket.sendall(width.to_bytes())
-client_socket.sendall(height.to_bytes())
+client_socket.sendall(width.to_bytes(2, 'little', signed=False))
+client_socket.sendall(height.to_bytes(2, 'little', signed=False))
 
 client_socket.close()
 client_socket=None
