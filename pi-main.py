@@ -71,14 +71,16 @@ while (True):
     # Detect ArUco markers in the image
     corners, markerIds, rejectedCandidates = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     print(len(markerIds))
-    stream=None
-    frame=None
+    # Reset the stream for the next capture
+    stream.seek(0)
+    stream.truncate(0)
     if(len(markerIds)==4):
         break
 
    # print(len(markerIds))
 
 camera.stop_preview()
+camera.close()
 
 detectionstart=time.time()
 
