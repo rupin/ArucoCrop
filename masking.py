@@ -1,5 +1,3 @@
-
-
 from PIL import Image
 import numpy as np
 
@@ -18,11 +16,11 @@ mask_array = np.array(mask_image)
 result_array = np.zeros_like(roi_array, dtype=np.uint8)
 
 # Mask the ROI image based on the mask using NumPy
-mask_black = (mask_array == [0, 0, 0, 255])  # Assuming black pixels have alpha=255
+mask_black = (mask_array[..., 0] == 0)  # Check only the red channel for black pixels
 result_array[mask_black] = [0, 0, 0, 0]
 
 # Use a mask to copy the ROI pixels where the mask is white
-mask_white = (mask_array != [0, 0, 0, 255])  # Assuming white pixels have alpha=255
+mask_white = (mask_array[..., 0] != 0)  # Check only the red channel for white pixels
 result_array[mask_white] = roi_array[mask_white]
 
 # Convert the NumPy array back to an image
