@@ -23,8 +23,8 @@ client_socket.connect((HOST, PORT))
 
 width, height, imagebytes=read_image("result.png")
 
-client_socket.sendall(width)
-client_socket.sendall(height)
+client_socket.sendall(width.to_bytes())
+client_socket.sendall(height.to_bytes())
 
 client_socket.close()
 client_socket=None
