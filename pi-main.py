@@ -128,7 +128,7 @@ cv2.polylines(frame, [np.int32(corners[i])], isClosed=True, color=(0, 0, 255), t
 
 maskstart=time.time()
 # Load ROI and mask images
-roi_image = Image.open("roi.png")
+"""roi_image = Image.open("roi.png")
 mask_image = Image.open("mask.png")
 roi_image=roi_image.copy()
 # Ensure both images have the same dimensions
@@ -149,6 +149,32 @@ for x in range(mask_image.width):
         else:  # White pixel in mask
             result_image.putpixel((x, y), roi_pixel)  # Copy ROI pixel
 
+result_image.save("result.png")
+"""
+
+
+# Load ROI and mask images
+roi_image = Image.open("roi.png")
+mask_image = Image.open("mask.png")
+
+# Ensure both images have the same dimensions
+roi_image = roi_image.resize(mask_image.size)
+
+# Convert the images to NumPy arrays
+roi_array = np.array(roi_image)
+mask_array = np.array(mask_image)
+
+# Create a new transparent image with the same dimensions as ROI image
+result_array = np.zeros_like(roi_array, dtype=np.uint8)
+
+# Mask the ROI image based on the mask using NumPy
+result_array[mask_array == [0, 0, 0]] = [0, 0, 0, 0]
+result_array[mask_array != [0, 0, 0]] = roi_array[mask_array != [0, 0, 0]]
+
+# Convert the NumPy array back to an image
+result_image = Image.fromarray(result_array)
+
+# Save the result image
 result_image.save("result.png")
 
 maskend=time.time()
