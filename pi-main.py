@@ -55,8 +55,9 @@ parameters = aruco.DetectorParameters_create()
 camera.start_preview()
 
 preview_start=time.time()
-while (markerIds is None or len(markerIds)!=4):
-
+print("We are Ready to Scan Now")
+while (True):
+    #print("Aruco Detected")
     camera.capture(stream, format='png')
     
     # Reset the stream position to the beginning
@@ -69,7 +70,11 @@ while (markerIds is None or len(markerIds)!=4):
     #cv2.waitKey(1)
     # Detect ArUco markers in the image
     corners, markerIds, rejectedCandidates = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
-    #print(len(markerIds))
+
+    if(len(markerIds)==4):
+        break
+
+   # print(len(markerIds))
 
 camera.stop_preview()
 
