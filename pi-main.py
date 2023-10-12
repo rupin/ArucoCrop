@@ -10,9 +10,11 @@ import pickle
 import struct
 
 def read_image(file_path):
+    with Image.open(file_path) as im:
+        width, height=im.width, im.height
     with open(file_path, "rb") as file:
         image_bytes = file.read()
-    return image_bytes
+    return width, height, image_bytes
 
 
 # Create a PiCamera instance
