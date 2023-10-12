@@ -1,3 +1,4 @@
+import time
 start=time.time()
 
 import cv2
@@ -7,7 +8,7 @@ from PIL import Image
 import picamera
 from io import BytesIO
 
-import time
+
 
 import socket
 import pickle
