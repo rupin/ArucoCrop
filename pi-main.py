@@ -135,7 +135,7 @@ for x in range(mask_image.width):
 
 print("Result Generated, sending across")
 # Constants
-HOST = '192.168.29.16'
+HOST = '192.168.29.213'
 PORT = 12345
 
 # Create a socket connection to Unity
