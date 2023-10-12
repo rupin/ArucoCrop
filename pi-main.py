@@ -154,7 +154,7 @@ result_image.save("result.png")
 
 
 # Load ROI and mask images
-roi_image = Image.open("ROI.png")
+roi_image = Image.open("roi.png")
 mask_image = Image.open("mask.png")
 
 # Ensure both images have the same dimensions
