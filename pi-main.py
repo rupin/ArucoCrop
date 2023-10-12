@@ -9,6 +9,11 @@ import socket
 import pickle
 import struct
 
+def read_image(file_path):
+    with open(file_path, "rb") as file:
+        image_bytes = file.read()
+    return image_bytes
+
 
 # Create a PiCamera instance
 camera = picamera.PiCamera()
@@ -131,25 +136,18 @@ for x in range(mask_image.width):
         else:  # White pixel in mask
             result_image.putpixel((x, y), roi_pixel)  # Copy ROI pixel
 
+result_image.save("result.png")
 
 
 print("Result Generated, sending across")
 # Constants
-HOST = '192.168.29.213'
+HOST = '192.168.29.16'
 PORT = 12345
 
 # Create a socket connection to Unity
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
-client_socket.sendall(bytes("Testing Connection",'utf-8'))
-
-data = pickle.dumps(frame)
-message_size = struct.pack("L", len(result_image))
-
-# Send the image to Unity
-client_socket.sendall(message_size + data)
-
+client_socket.sendall(read_image("result.png"))
 client_socket.close()
-
-# Save the result image
-result_image.save("result.png")
+client_socket=None
+print("Image Sent, did you recieve it?")
